@@ -7,11 +7,20 @@ describe('Game', () => {
 		game = new Game()
 	})
 
-	it('should detect a winner', (done) => {
+	it('should detect a winner in a row', (done) => {
 		game.board.setPiece(0, 0, "X");
 		game.board.setPiece(0, 1, "X");
 		game.detectWinner().should.be.false;
 		game.board.setPiece(0, 2, "X");
+		game.detectWinner().should.equal("X");
+		done()
+	});
+
+	it('should detect a winner in a column', (done) => {
+		game.board.setPiece(0, 0, "X");
+		game.board.setPiece(1, 0, "X");
+		game.detectWinner().should.be.false;
+		game.board.setPiece(2, 0, "X");
 		game.detectWinner().should.equal("X");
 		done()
 	});

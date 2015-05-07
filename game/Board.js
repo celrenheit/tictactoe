@@ -60,7 +60,7 @@ export default class Board {
 	getColumn(c) {
 		let column = [];
 		for(let i=0; i<this.board.length; i++){
-		  column.push(this.board[c][i]);
+		  column.push(this.board[i][c]);
 		}
 		return column;
 	}
