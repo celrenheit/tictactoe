@@ -12,12 +12,10 @@ export default class Game extends EventEmitter {
 	}
 
 	configure(board, turn) {
-		console.log('this old', this);
 		this.turn = turn || "X"
 		this.board = board || new Board(3);	
 		this.status = "waiting";
 		this.player = {}
-		console.log('this new', this);
 	}
 
 	restart() {
