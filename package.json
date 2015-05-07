@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "babel": "^5.2.16",
+    "cuid": "^1.2.4",
     "lodash": "^3.8.0",
     "terminal-table": "0.0.12"
   },

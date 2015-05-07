@@ -1,5 +1,6 @@
 import {EventEmitter} from 'events'
 import Board from './Board'
+import cuid from 'cuid'
 
 
 export default class Game extends EventEmitter {
@@ -12,6 +13,7 @@ export default class Game extends EventEmitter {
 	}
 
 	configure(board, turn) {
+		this.id = cuid()
 		this.turn = turn || "X"
 		this.board = board || new Board(3);	
 		this.status = "waiting";
