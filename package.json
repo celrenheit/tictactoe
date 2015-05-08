@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --compilers js:babel/register",
-    "dev": "nodemon --exec 'npm test' --ignore '**/*.json'"
+    "dev": "nodemon --exec 'npm test' --ignore '**/*.json'",
+    "postinstall": "echo \"{}\" > cache.json && cd ui/ && npm i && bower i && ./node_modules/.bin/gulp build"
   },
   "author": "Celrenheit <celrenheit+github@gmail.com>",
   "license": "MIT",
