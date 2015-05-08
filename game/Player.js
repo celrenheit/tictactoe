@@ -2,14 +2,15 @@ import {EventEmitter} from 'events'
 
 export default class Player extends EventEmitter {
 
-	constructor(game) {
-		super();
-		this.game = game;
-		this.piece = undefined;
+	constructor(game, options) {
+		super()
+		this.game = game
+		this.piece = undefined
 		this.type = "player"
+		this.options = options || {}
 
 		if(this.onMyTurn && typeof this.onMyTurn === "function")
-			this.on('play', () => this.onMyTurn(...arguments))
+			this.on('play', (board, turn) => this.onMyTurn(board, turn))
 	}
 
 	makeMove(x, y) {
