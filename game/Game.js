@@ -51,36 +51,9 @@ export default class Game extends EventEmitter {
 	}
 
 	detectWinner() {
-		for(let i = 0; i < this.board.size; i++) {
-
-			let r = this.checkLine(...this.board.getRow(i));
-			if(r)
-				return r;
-
-			let c = this.checkLine(...this.board.getColumn(i))
-			if(c)
-				return c;
-		}
-
-		let firstDiag = this.checkLine(...this.board.getFirstDiagonal())
-		if(firstDiag)
-			return firstDiag
-
-		let secondDiag = this.checkLine(...this.board.getSecondDiagonal())
-		if(secondDiag)
-			return secondDiag
-		
-		return false;
+		return this.board.findWinner()
 	}
 
-	checkLine(a, b, c) {
-		if(a.getPiece() === "X" && b.getPiece() === "X" && c.getPiece() === "X")
-			return "X";
-		else if(a.getPiece() === "O" && b.getPiece() === "O" && c.getPiece() === "O")
-			return "O";
-		else
-			return false;
-	}
 
 	addPlayer(player) {
 		if(this.players.length == 2) {
@@ -105,7 +78,7 @@ export default class Game extends EventEmitter {
 	}
 
 	requestAMove() {
-		this.player[this.turn].emit('play', this.board);
+		this.player[this.turn].emit('play', this.board, this.turn);
 	}
 
 	onPlayerPlayed(x, y, turn) {
