@@ -55,7 +55,7 @@ export default class Computer extends Player{
 		else if(winner === (turn === "X" ? "O" : "X")){
 			return (depth || 0) - 10
 		}
-		else {console.log('else');
+		else {
 			return 0
 		}
 	}
