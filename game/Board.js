@@ -1,4 +1,5 @@
 import Table from "terminal-table"
+import Cell from './Cell'
 
 export default class Board {
 
@@ -18,8 +19,12 @@ export default class Board {
 		return board;
 	}
 
+	getPiece(x, y) {
+		return this.board[x][y]
+	}
+
 	setPiece(x, y, piece) {
-		return this.board[x][y].setPiece(piece);
+		return this.board[x][y].setPiece(piece instanceof Cell ? piece.piece : piece);
 	}
 
 	setPieces(pieces) {
@@ -41,6 +46,65 @@ export default class Board {
 		return positions
 	}
 
+	checkLine(a, b, c) {
+		if(a.getPiece() === "X" && b.getPiece() === "X" && c.getPiece() === "X")
+			return "X";
+		else if(a.getPiece() === "O" && b.getPiece() === "O" && c.getPiece() === "O")
+			return "O";
+		else
+			return false;
+	}
+
+	traverse(callback) {
+		for (let i = 0; i < this.size; i ++) {
+			for (let j = 0; j < this.size; j ++) {
+				callback(x, y)
+			}
+		}
+	}
+
+	traverseRows(callback) {
+		for(let i = 0; i < this.size; i++) {
+			callback(this.getRow(i))
+			callback(this.getColumn(i))
+		}
+
+		callback(this.getFirstDiagonal())
+		callback(this.getSecondDiagonal())
+	}
+
+	findWinner() {
+		for(let i = 0; i < this.size; i++) {
+
+			let r = this.checkLine(...this.getRow(i));
+			if(r)
+				return r;
+
+			let c = this.checkLine(...this.getColumn(i))
+			if(c)
+				return c;
+		}
+
+		let firstDiag = this.checkLine(...this.getFirstDiagonal())
+		if(firstDiag)
+			return firstDiag
+
+		let secondDiag = this.checkLine(...this.getSecondDiagonal())
+		if(secondDiag)
+			return secondDiag
+
+		return false;
+	}
+
+	clone() {
+		let g = new Board(this.size)
+		g.setPieces(this.board)
+		return g
+	}
+
+	isGameOver() {
+		return this.openPositions() === 0 || this.findWinner()
+	}
 	openPositions() {
 		return this.getAvailablePositions().length;
 	}
@@ -99,28 +163,3 @@ export default class Board {
 
 }
 
-
-class Cell {
-	constructor(x, y) {
-		this.x = x;
-		this.y = y;
-		this.piece = undefined;
-	}
-
-	setPiece(piece) {
-		if(this.piece) {
-			console.log('There is already a piece here')
-			return false;
-		}
-		this.piece = piece;
-		return true;
-	}
-
-	getPiece() {
-		return this.piece;
-	}
-
-	isEmpty() {
-		return !this.piece;
-	}
-}
