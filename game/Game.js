@@ -34,6 +34,7 @@ export default class Game extends EventEmitter {
 				this.player[result].emit('you win')
 				this.player[result === "O" ? "X" : "O"].emit('you lost')
 			}
+			this.winner = result;
 			this.emit('game over', result);
 			return true
 		}
@@ -70,7 +71,9 @@ export default class Game extends EventEmitter {
 		this.status = "started";
 
 		let rand = Math.round(Math.random());
+		this.players[rand].piece = "X";
 		this.player.X = this.players[rand];
+		this.players[1-rand].piece = "O";
 		this.player.O = this.players[1-rand];
 		this.player.X.on('make move', (x, y) => this.onPlayerPlayed(x, y, "X"))
 		this.player.O.on('make move', (x, y) => this.onPlayerPlayed(x, y, "O"))
