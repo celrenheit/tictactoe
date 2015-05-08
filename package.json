@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --compilers js:babel/register",
     "dev": "nodemon --exec 'npm test' --ignore '**/*.json'",
-    "postinstall": "echo \"{}\" > cache.json && cd ui/ && npm i && ./node_modules/.bin/bower i && ./node_modules/.bin/gulp build"
+    "postinstall": "echo \"{}\" > cache.json && cd ui/ && NODE_ENV=development npm i && ./node_modules/.bin/bower i && ./node_modules/.bin/gulp build"
   },
   "author": "Celrenheit <celrenheit+github@gmail.com>",
   "license": "MIT",
