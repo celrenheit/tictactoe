@@ -2,6 +2,7 @@ import React from 'react'
 import BoardComponent from './BoardComponent.jsx'
 import {Game, Human, Computer} from '../../../game'
 import Loader from 'react-loader'
+import styles from '../styles'
 
 export default class GameComponent extends React.Component {
 
@@ -13,7 +14,8 @@ export default class GameComponent extends React.Component {
 		this.clickEnabled = false
 		this.state = {
 			board: this.game.board,
-			displayLoading: false
+			displayLoading: false,
+			gameover: false
 		}
 		this.linkPlayers()
 		this.attachEvents()
@@ -51,7 +53,8 @@ export default class GameComponent extends React.Component {
 		this.game.on('game over', (result) => {
 			this.enabled = false
 			this.setState({
-				enabled: false
+				enabled: false,
+				gameover: true
 			})
 			console.log('Game over !!!!! ', result)
 		})
@@ -90,7 +93,8 @@ export default class GameComponent extends React.Component {
 		this.game = this.createGame()
 		this.setState({
 			board: this.game.board,
-			displayLoading: false
+			displayLoading: false,
+			gameover: false
 		})
 		this.linkPlayers()
 		this.attachEvents()
@@ -109,9 +113,10 @@ export default class GameComponent extends React.Component {
 
 	render() {
 		return (
-			<div key={this.game.id}>
-				<BoardComponent player={this.human} board={this.state.board} cellClick={this.cellClick.bind(this)}/>
-				<Display enabled={this.enabled} restartFn={this.restart.bind(this)} displayLoading={this.state.displayLoading}/>
+			<div key={this.game.id} style={styles.main}>
+				<div style={{ flex: 1 }}></div>
+				<BoardComponent game={this.game} gameover={this.state.gameover} player={this.human} board={this.state.board} cellClick={this.cellClick.bind(this)}/>
+				<Display human={this.human} enabled={this.enabled} restartFn={this.restart.bind(this)} displayLoading={this.state.displayLoading}/>
 			</div>
 		)
 	}
@@ -131,14 +136,33 @@ class Display extends React.Component {
 	}
 
 	render() {
-			console.log('this.props.displayLoading', this.props.displayLoading);
+		let humanClasses = React.addons.classSet({
+			"cell": true,
+			"HumanColor": true,
+			"X": this.props.human.piece === "X",
+			"O": this.props.human.piece === "O"
+		})
+		let computerClasses = React.addons.classSet({
+			"cell": true,
+			"ComputerColor": true,
+			"X": this.props.human.piece !== "X",
+			"O": this.props.human.piece !== "O"
+		})
+
 		return (
 			<div>
-				<button className="btn btn-primary" onClick={this.handleClick.bind(this)}>New Game</button>
-				<span>{ this.state.enabled ? "Playing" : "Not playing"}</span>
-				
-				 <Loader loaded={!this.state.displayLoading}>
-				 </Loader>
+				<button className="button blue animate" onClick={this.handleClick.bind(this)}>New Game</button>
+				<div className="roles" style={styles.roles}>
+					<div>
+						<div className="role-title"> You are </div>
+						<div className={humanClasses}></div>
+					</div>
+					<div style={{flex: 1}}></div>
+					<div>
+						<div className="role-title">Bot is</div>
+						<div className={computerClasses}></div>
+					</div>
+				</div>
 			</div>
 		)
 	}	
