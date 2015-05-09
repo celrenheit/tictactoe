@@ -24,7 +24,7 @@ export default class Computer extends Player{
 		// TODO: Move this into a separate process/worker
 		let opponent = turn === "X" ? "O" : "X"
 		let w
-		this.minimax(board, turn, turn, 2)
+		this.minimax(board, turn, turn, 0)
 		cb()
 	}
 
