@@ -10,9 +10,9 @@ $spacing:        5px;
 $player-X-icon:  "\f00d";
 $player-O-icon:  "\f10c";
 
-$cell-color: #78bec5;
-$HumanColor: #dc685a;
-$ComputerColor: #ecaf4f;
+$cell-color: #72CBD4;
+$HumanColor: #e74c3c;
+$ComputerColor: #f1c40f;
 $hover-color:    #3d4250;
 
 *, *:before, *:after {
@@ -41,9 +41,11 @@ div, span {
 }
 
 .board {
-	margin: 50px auto 30px auto;
+	margin: 20px auto 10px auto;
 	width: ($size-sm + $spacing*2)*3; 
 	@media(min-width: 450px) {
+		margin-top: 50px;
+		margin-bottom: 30px;
 		height: ($size + $spacing*2)*3;
 		width: ($size + $spacing*2)*3;
 	}
@@ -108,10 +110,19 @@ div, span {
 		background-color: $ComputerColor;
 	}
 }
-
-.role-title{
-      font-size: 20px;
-	font-family: 'Roboto'
+.roles {
+	.role-title{
+	    font-size: 20px;
+		font-family: 'Roboto'
+	}
+	.cell {
+	    height: $size-sm *0.8;
+		width: $size-sm *0.8;
+		@media(min-width: 450px) {
+		    height: $size*0.8;
+			width: $size*0.8;
+		}
+	}
 }
 
 .button
@@ -125,34 +136,17 @@ div, span {
 	font-size: 25px;
 	color: #FFF;
 	text-decoration: none;	
+	outline: none;
+	@media(max-width: 450px) {
+		padding: 5px 20px;
+	}
 }
 
-.blue
+.new-game
 {
-	background-color: #3498DB;
-	border-bottom: 5px solid #2980B9;
-	text-shadow: 0px -2px #2980B9;
-}
-
-.red
-{
-	background-color: #E74C3C;
-	border-bottom: 5px solid #BD3E31;
-	text-shadow: 0px -2px #BD3E31;
-}
-
-.green
-{
-	background-color: #82BF56;
-	border-bottom: 5px solid #669644;
-	text-shadow: 0px -2px #669644;
-}
-
-.yellow
-{
-	background-color: #F2CF66;
-	border-bottom: 5px solid #D1B358;
-	text-shadow: 0px -2px #D1B358;
+	background-color: #1abc9c;
+	border-bottom: 5px solid #16a085;
+	text-shadow: 0px -2px #16a085;
 }
 
 .button:active

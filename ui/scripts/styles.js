@@ -27,7 +27,7 @@ export default StyleSheet.create({
 	},
 	roles: {
 		flexDirection: 'row',
-		marginTop: 30,
+		marginTop: 10,
 		marginLeft:20,
 		marginRight:20
 	}
