@@ -24,7 +24,7 @@ export default class Computer extends Player{
 		// TODO: Move this into a separate process/worker
 		let opponent = turn === "X" ? "O" : "X"
 		let w
-		this.minimax(board, turn, turn, 0)
+		this.minimax(board, turn, turn, 2)
 		cb()
 	}
 
@@ -72,7 +72,7 @@ export default class Computer extends Player{
 	minimax(board, currentTurn, playerTurn, depth) {
 		let currentOpponent = currentTurn === "X" ? "O" : "X"
 		let realOpponent = playerTurn === "X" ? "O" : "X"
-		if(board.isGameOver()){
+		if(board.isGameOver() || depth === 4){
 			let playerScore = this.scoreByRows(board,playerTurn)
 			let opponentScore = this.scoreByRows(board,realOpponent)
 			return  playerScore > opponentScore ? playerScore : -opponentScore
