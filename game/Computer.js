@@ -24,13 +24,7 @@ export default class Computer extends Player{
 		// TODO: Move this into a separate process/worker
 		let opponent = turn === "X" ? "O" : "X"
 		let w
-		if((w  = this.findWinningMove(board, opponent)).length) {
-			this.choice = w[0]
-		} else  if((w  = this.findWinningMove(board, turn)).length) {
-			this.choice = w[0]
-		} else {
-			this.minimax(board, turn, turn, 0)
-		}
+		this.minimax(board, turn, turn, 0)
 		cb()
 	}
 
@@ -60,23 +54,42 @@ export default class Computer extends Player{
 		}
 	}
 
+	scoreByRows(board, turn) {
+		let score = 0
+		board.traverseRows((row) => {
+			let same = row.filter((c) => c.piece === turn)
+			let empty = row.filter((c) => !c.piece)
+			if(same.length === 3)
+				score += 100
+			else if(same.length === 2 && empty.length === 1)
+				score += 10
+			else if(same.length === 1 && empty.length === 2)
+				score +=1
+		})
+		return score
+	}
+
 	minimax(board, currentTurn, playerTurn, depth) {
+		let currentOpponent = currentTurn === "X" ? "O" : "X"
+		let realOpponent = playerTurn === "X" ? "O" : "X"
 		if(board.isGameOver()){
-			return this.getMMScore(board, playerTurn, depth)
+			let playerScore = this.scoreByRows(board,playerTurn)
+			let opponentScore = this.scoreByRows(board,realOpponent)
+			return  playerScore > opponentScore ? playerScore : -opponentScore
 		}
-		depth += 2
+
+		depth += 1
 		let scores = []
 		let moves = []
-		let opponent = playerTurn === "X" ? "O" : "X"
 
 		board.getAvailablePositions().forEach((m) => {
 			let b = board.clone()
-			b.setPiece(m.x, m.y, playerTurn)
-			let res, key = this.cache.generateKeyFromSHA1(b, currentTurn === "X" ? "O" : "X", playerTurn, depth);
+			b.setPiece(m.x, m.y, currentTurn)
+			let res, key = this.cache.generateKeyFromSHA1(b, currentOpponent, playerTurn, depth);
 			if(this.cache.exist(key))
 				res = this.cache.get(key)
 			else
-				res = this.cache.set(key, this.minimax(b, currentTurn === "X" ? "O" : "X", playerTurn, depth))
+				res = this.cache.set(key, this.minimax(b, currentOpponent, playerTurn, depth))
 			scores.push(res)
 			moves.push(m)
 		})
