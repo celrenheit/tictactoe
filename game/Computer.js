@@ -1,13 +1,15 @@
 import Player from './Player'
 import _ from 'lodash'
 import CacheManager from './CacheManager'
-
+let cache;
+if(process.browser)
+	cache = new CacheManager()
 export default class Computer extends Player{
 
 	constructor() {
 		super(...arguments)
 		this.type = "computer"
-		this.cache = new CacheManager({
+		this.cache = cache || new CacheManager({
 			enabled: this.options.hasOwnProperty('cacheEnabled') ? this.options.cacheEnabled : true
 		})
 	}
@@ -54,17 +56,17 @@ export default class Computer extends Player{
 		}
 	}
 
-	scoreByRows(board, turn) {
+	scoreByRows(board, turn, depth) {
 		let score = 0
 		board.traverseRows((row) => {
 			let same = row.filter((c) => c.piece === turn)
 			let empty = row.filter((c) => !c.piece)
 			if(same.length === 3)
-				score += 100
+				score += 100 - depth*5
 			else if(same.length === 2 && empty.length === 1)
-				score += 10
+				score += 10 - depth
 			else if(same.length === 1 && empty.length === 2)
-				score +=1
+				score +=1 - depth/8
 		})
 		return score
 	}
@@ -72,9 +74,9 @@ export default class Computer extends Player{
 	minimax(board, currentTurn, playerTurn, depth) {
 		let currentOpponent = currentTurn === "X" ? "O" : "X"
 		let realOpponent = playerTurn === "X" ? "O" : "X"
-		if(board.isGameOver() || depth === 4){
-			let playerScore = this.scoreByRows(board,playerTurn)
-			let opponentScore = this.scoreByRows(board,realOpponent)
+		if(depth === 4 || board.isGameOver()) {
+			let playerScore = this.scoreByRows(board, playerTurn, depth)
+			let opponentScore = this.scoreByRows(board, realOpponent, -depth)
 			return  playerScore > opponentScore ? playerScore : -opponentScore
 		}
 
