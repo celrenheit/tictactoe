@@ -6,8 +6,11 @@ var computer, board, cacheManager = new CacheManager();
 describe("Computer Artificial intelligence", function() {
 
 	beforeEach(() => {
-		computer = new Computer()
+		computer = new Computer({
+			cacheEnabled: false
+		})
 		board = new Board(3)
+		cacheManager.clear()
 	})
 
 	it("should find a winning position", function() {
@@ -104,6 +107,55 @@ describe("Computer Artificial intelligence", function() {
 			stats.draw.should.equal(N)
 			done()
 		})
+	})
+
+	it('should test minimax score algorithm', () => {
+
+		board.setPieces([
+			["O",    , "X"],
+			["X", "X",    ],
+			["X", "O", "O"]
+		])
+		computer.getMMScore(board, "X", 0).should.equal(10)
+
+		board.setPieces([
+			["O", "X", "X"],
+			["X", "O",    ],
+			["X", "O", "O"]
+		], true)
+		computer.getMMScore(board, "X", 0).should.equal(-10)
+
+	})
+
+	it('should test minimax algorithm', () => {
+
+		board.setPieces([
+			["O",    , "X"],
+			["X",    ,    ],
+			["X", "O", "O"]
+		])
+		computer.minimax(board, "X", "X", 0)
+		console.log('choice', computer.choice);
+		computer.choice.x.should.equal(1)
+		computer.choice.y.should.equal(1)
+
+	})
+
+	it('should test minimax algorithm 2', () => {
+
+		board.setPieces([
+			[   , "X",    ],
+			[   ,    , "X"],
+			["O", "O", "X"]
+		])
+
+		let m = computer.minimax(board, "O", "O", 0)
+		computer.choice.x.should.equal(0)
+		computer.choice.y.should.equal(2)
+	})
+
+	afterEach(() => {
+		cacheManager.clear()
 	})
 
 })
