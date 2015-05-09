@@ -148,8 +148,21 @@ describe("Computer Artificial intelligence", function() {
 			["O", "O", "X"]
 		])
 
-		let m = computer.minimax(board, "O", "O", 0)
+		let m = computer.minimax(board, "O", "O", 2)
 		computer.choice.x.should.equal(0)
+		computer.choice.y.should.equal(2)
+	})
+
+	it('should prefer the fastest move to win', () => {
+
+		board.setPieces([
+			["O", "X",    ],
+			[   , "O", "X"],
+			[   ,    ,    ]
+		])
+
+		let m = computer.minimax(board, "O", "O", 2)
+		computer.choice.x.should.equal(2)
 		computer.choice.y.should.equal(2)
 	})
 
