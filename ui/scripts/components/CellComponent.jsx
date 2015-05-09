@@ -1,5 +1,6 @@
 import React from 'react/addons'
 import styles from '../styles'
+import classnames from 'classnames'
 
 export default class CellComponent extends React.Component {
 	
@@ -26,11 +27,12 @@ export default class CellComponent extends React.Component {
 	}
 
 	handleClick() {
-		this.props.cellClick(this.props.cell.x, this.props.cell.y)
+		if(!this.props.cell.piece)
+			this.props.cellClick(this.props.cell.x, this.props.cell.y)
 	}
 
 	render() {
-		let classes = React.addons.classSet({
+		let classes = classnames({
 			'cell': true,
 			'box': true,
 			['hovered-'+this.props.player.piece]: this.state.hovered,

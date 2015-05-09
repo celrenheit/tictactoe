@@ -3,34 +3,29 @@ import BoardComponent from './BoardComponent.jsx'
 import {Game, Human, Computer} from '../../../game'
 import Loader from 'react-loader'
 import styles from '../styles'
+import classnames from 'classnames'
 
 export default class GameComponent extends React.Component {
 
 	constructor() {
 		super(...arguments)
+	}
 
-		this.game = this.createGame()
-		this.enabled = false
-		this.clickEnabled = false
-		this.state = {
+	componentWillMount() {
+		this.newGame()
+	}
+
+	newGame() {
+		this.game = new Game()
+		this.setState({
 			board: this.game.board,
 			displayLoading: false,
-			gameover: false
-		}
+			gameover: false,
+			clickEnabled: false
+		})
 		this.linkPlayers()
 		this.attachEvents()
-		this.startGame()
-	}
-
-	componentDidMount() {}
-	
-	startGame() {
 		this.game.start()
-	}
-
-	createGame() {
-		let game = new Game();
-		return game
 	}
 
 	linkPlayers() {
@@ -44,19 +39,11 @@ export default class GameComponent extends React.Component {
 
 	attachEvents() {
 		this.game.on('started', () => {
-			console.log('Started');
-			this.enabled = true
-			this.setState({
-				enabled: true
-			})
 		})
 		this.game.on('game over', (result) => {
-			this.enabled = false
 			this.setState({
-				enabled: false,
 				gameover: true
 			})
-			console.log('Game over !!!!! ', result)
 		})
 		this.game.on('player played', () => {
 			this.setState({
@@ -64,13 +51,11 @@ export default class GameComponent extends React.Component {
 			})
 		})
 		this.human.on('play', () => {
-			this.clickEnabled = true
 			this.setState({
 				clickEnabled: true
 			})
 		})
 		this.human.on('dont play', () => {
-			this.clickEnabled = false
 			this.setState({
 				clickEnabled: false
 			})
@@ -88,35 +73,25 @@ export default class GameComponent extends React.Component {
 		})
 
 	}
-
-	restart() {
-		this.game = this.createGame()
-		this.setState({
-			board: this.game.board,
-			displayLoading: false,
-			gameover: false
-		})
-		this.linkPlayers()
-		this.attachEvents()
-		this.enabled = false
-		this.clickEnabled = false
-		this.startGame();
-	}
 	
 	cellClick(x, y) {
-		console.log('click', this.clickEnabled);
-		if(!this.clickEnabled || this.game.status === "game over")
+		if(!this.state.clickEnabled || this.game.status === "game over")
 			return false;
-		let human = this.game.player.X instanceof Human ? this.game.player.X: this.game.player.O;
-		human.makeMove(x,y)
+		this.human.makeMove(x,y)
 	}
 
 	render() {
 		return (
 			<div key={this.game.id} style={styles.main}>
 				<div style={{ flex: 1 }}></div>
-				<BoardComponent game={this.game} gameover={this.state.gameover} player={this.human} board={this.state.board} cellClick={this.cellClick.bind(this)}/>
-				<Display human={this.human} enabled={this.enabled} restartFn={this.restart.bind(this)} displayLoading={this.state.displayLoading}/>
+				<BoardComponent game={this.game} 
+								gameover={this.state.gameover} 
+								player={this.human} 
+								cellClick={this.cellClick.bind(this)}
+								restartFn={this.newGame.bind(this)}/>
+				<Display human={this.human} 
+						 restartFn={this.newGame.bind(this)}
+						 displayLoading={this.state.displayLoading}/>
 			</div>
 		)
 	}
@@ -126,7 +101,6 @@ class Display extends React.Component {
 	constructor() {
 		super(...arguments)
 		this.state = {
-			enabled: this.props.enabled,
 			displayLoading: this.props.displayLoading
 		}
 	}
@@ -136,13 +110,13 @@ class Display extends React.Component {
 	}
 
 	render() {
-		let humanClasses = React.addons.classSet({
+		let humanClasses = classnames({
 			"cell": true,
 			"HumanColor": true,
 			"X": this.props.human.piece === "X",
 			"O": this.props.human.piece === "O"
 		})
-		let computerClasses = React.addons.classSet({
+		let computerClasses = classnames({
 			"cell": true,
 			"ComputerColor": true,
 			"X": this.props.human.piece !== "X",
@@ -151,7 +125,7 @@ class Display extends React.Component {
 
 		return (
 			<div>
-				<button className="button blue animate" onClick={this.handleClick.bind(this)}>New Game</button>
+				<button className="button new-game animate" onClick={this.handleClick.bind(this)}>New Game</button>
 				<div className="roles" style={styles.roles}>
 					<div>
 						<div className="role-title"> You are </div>
