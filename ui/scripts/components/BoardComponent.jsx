@@ -37,7 +37,11 @@ export default class BoardComponent extends React.Component {
 					this.props.restartFn()
 				}
 			}, this.restartTimeout*0.2)
-		}
+		} 
+	}
+
+	componentWillUnMount() {
+		clearInterval(this.restartInterval)
 	}
 
 	render() {
