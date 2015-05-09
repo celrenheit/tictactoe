@@ -23,14 +23,14 @@ export default class Board {
 		return this.board[x][y]
 	}
 
-	setPiece(x, y, piece) {
-		return this.board[x][y].setPiece(piece instanceof Cell ? piece.piece : piece);
+	setPiece(x, y, piece, force) {
+		return this.board[x][y].setPiece(piece instanceof Cell ? piece.piece : piece, force);
 	}
 
-	setPieces(pieces) {
+	setPieces(pieces, force) {
 		for (let i = 0; i < this.size; i ++) {
 			for (let j = 0; j < this.size; j ++) {
-					this.setPiece(i,j, pieces[i][j])
+					this.setPiece(i,j, pieces[i][j], force)
 			}
 		}
 	}

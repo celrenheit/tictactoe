@@ -5,8 +5,8 @@ export default class Cell {
 		this.piece = undefined;
 	}
 
-	setPiece(piece) {
-		if(this.piece) {
+	setPiece(piece, force) {
+		if(this.piece && !force) {
 			console.log('There is already a piece here')
 			return false;
 		}
