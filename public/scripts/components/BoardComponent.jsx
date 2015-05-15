@@ -61,7 +61,7 @@ export default class BoardComponent extends React.Component {
 		}
 		let autoRestartStyles = {}
 		if(this.props.gameover) {
-			text = this.props.game.winner === this.state.player.piece ? "You win :)" : 
+			text = this.props.game.winner === this.props.player.piece ? "You win :)" : 
 										this.props.game.winner === "draw" ? "Draw!" : "You lost :("
 			endStyles.display = 'block'
 		}
