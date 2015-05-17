@@ -23,6 +23,7 @@ export default class Cell {
 		this.piece = piece;
 		return true;
 	}
+
 	/**
 	 * Return the piece type
 	 * 
@@ -31,6 +32,7 @@ export default class Cell {
 	getPiece() {
 		return this.piece;
 	}
+	
 	/**
 	 * Checks if this cell contains a piece
 	 *
