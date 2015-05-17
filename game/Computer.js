@@ -4,6 +4,11 @@ import CacheManager from './CacheManager'
 let cache;
 if(process.browser)
 	cache = new CacheManager()
+
+/**
+ * Computer player
+ * @class Computer
+ */
 export default class Computer extends Player{
 
 	constructor() {
@@ -13,7 +18,11 @@ export default class Computer extends Player{
 			enabled: this.options.hasOwnProperty('cacheEnabled') ? this.options.cacheEnabled : true
 		})
 	}
-
+	/**
+	 * Function called every time it is the computer's turn to play
+	 * @param  {Board} board  The current board
+	 * @param  {String} turn  The current turn
+	 */
 	onMyTurn(board, turn) {
 		process.nextTick(() => {
 			this.findMoveInWorker(board, turn, () => {
@@ -29,7 +38,12 @@ export default class Computer extends Player{
 		this.minimax(board, turn, turn, 0)
 		cb()
 	}
-
+	/**
+	 * Finds if there is a winning move, i.e. two of the same pieces and an empty positions
+	 * @param  {Board} board  The current board
+	 * @param  {String} turn  The current turn
+	 * @return {Array}        The list of positions winning moves
+	 */
 	findWinningMove(board, turn) { // Try to find two in a row
 		let positions = []
 		board.traverseRows((row) => {
@@ -55,7 +69,13 @@ export default class Computer extends Player{
 			return 0
 		}
 	}
-
+	/**
+	 * Finds the score of the minimax algorithm
+	 * @param  {Board} 	board The current board
+	 * @param  {String} turn  The current turn
+	 * @param  {Number} depth The depth at the current step of lookup
+	 * @return {Number}       Score for the current turn at the current depth
+	 */
 	scoreByRows(board, turn, depth) {
 		let score = 0
 		board.traverseRows((row) => {
@@ -70,7 +90,14 @@ export default class Computer extends Player{
 		})
 		return score
 	}
-
+	/**
+	 * Minimax Algorithm
+	 * @param  {Board} 	board The current board
+	 * @param  {String} currentTurn  The current turn
+	 * @param  {String} playerTurn  The turn in which the player plays
+	 * @param  {Number} depth       The current depth
+	 * @return {Number}             The best score corresponding to either a maxmimizing turn or minimizing turn
+	 */
 	minimax(board, currentTurn, playerTurn, depth) {
 		let currentOpponent = currentTurn === "X" ? "O" : "X"
 		let realOpponent = playerTurn === "X" ? "O" : "X"
@@ -107,20 +134,5 @@ export default class Computer extends Player{
 			return scores[minScoreIndex]
 		}
 	}
-
-	positionExistsInArray(w, x, y) {
-		for (var i = 0; i < w.length; i++) {
-			if(w[i].x === x && w[i].y === y)
-				return true
-		}
-		return false
-	}
-
-	findBlockingMove(board, turn) {
-		this.findWinningMove(board, turn)
-	}
-
-	getAvailableDirections() {}
-
 
 }
