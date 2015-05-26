@@ -182,3 +182,18 @@ div, span {
     }
 
 }
+
+.starting_role {
+    background: rgba(0, 0, 0, .8);
+    top: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    color: #3d4250;
+    display: block;
+    padding-top: 55px;
+    position: absolute;
+    text-align: center;
+    z-index: 11;
+    border-radius: 14px;
+}

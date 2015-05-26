@@ -15,7 +15,7 @@ export default class GameComponent extends React.Component {
 		this.newGame()
 	}
 
-	newGame() {
+	createGame() {
 		this.game = new Game()
 		this.setState({
 			board: this.game.board,
@@ -25,6 +25,10 @@ export default class GameComponent extends React.Component {
 		})
 		this.linkPlayers()
 		this.attachEvents()
+	}
+
+	newGame() {
+		this.createGame()
 		this.game.start()
 	}
 
@@ -80,6 +84,15 @@ export default class GameComponent extends React.Component {
 		this.human.makeMove(x,y)
 	}
 
+	startsFirst(who) {
+		this.createGame()
+		let opts = {
+			X: who === "human" ? this.human : this.computer,
+			O: who !== "human" ? this.human : this.computer
+		}
+		this.game.start(opts)
+	}
+
 	render() {
 		return (
 			<div key={this.game.id} style={styles.main}>
@@ -90,6 +103,7 @@ export default class GameComponent extends React.Component {
 								cellClick={this.cellClick.bind(this)}
 								restartFn={this.newGame.bind(this)}/>
 				<Display human={this.human} 
+						 startsFirst={this.startsFirst.bind(this)}
 						 restartFn={this.newGame.bind(this)}
 						 displayLoading={this.state.displayLoading}/>
 			</div>
@@ -109,6 +123,26 @@ class Display extends React.Component {
 		this.props.restartFn()
 	}
 
+	handleHumanStartsFirst() {
+		this.props.startsFirst("human")
+	}
+
+	handleComputerStartsFirst() {
+		this.props.startsFirst("computer")
+	}
+
+	onMouseOver(role) {
+		this.setState({
+			starting_role: role
+		})
+	}
+
+	onMouseOut(role) {
+		this.setState({
+			starting_role: undefined
+		})
+	}
+
 	render() {
 		let humanClasses = classnames({
 			"cell": true,
@@ -123,18 +157,45 @@ class Display extends React.Component {
 			"O": this.props.human.piece !== "O"
 		})
 
+		let humanStyles = {
+			display: 'none'
+		}
+		let computerStyles = {
+			display: 'none'
+		}
+		let humanText = "", computerText = ""
+		if(this.state.starting_role) {
+			if(this.state.starting_role === "human") {
+				humanStyles.display = "block";
+				humanText = "I Start"
+			} else {
+				computerStyles.display = "block";
+				computerText = "You Start"
+			}
+		}
+
 		return (
 			<div>
 				<button className="button new-game animate" onClick={this.handleClick.bind(this)}>New Game</button>
 				<div className="roles" style={styles.roles}>
 					<div>
-						<div className="role-title"> You are </div>
-						<div className={humanClasses}></div>
+						<div className="role-title"> {humanText || "You are"} </div>
+						<div className={humanClasses} onClick={this.handleHumanStartsFirst.bind(this)}
+													  onMouseOver={this.onMouseOver.bind(this, "human")}
+													  onMouseOut={this.onMouseOut.bind(this, "human")}>
+							<div className="starting_role" style={humanStyles}>
+							</div>
+						</div>
 					</div>
 					<div style={{flex: 1}}></div>
 					<div>
-						<div className="role-title">Bot is</div>
-						<div className={computerClasses}></div>
+						<div className="role-title">{computerText || "Bot is"}</div>
+						<div className={computerClasses} onClick={this.handleComputerStartsFirst.bind(this)}
+														 onMouseOver={this.onMouseOver.bind(this, "computer")}
+														 onMouseOut={this.onMouseOut.bind(this, "computer")}>
+							<div className="starting_role" style={computerStyles}>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
