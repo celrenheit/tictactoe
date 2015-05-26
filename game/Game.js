@@ -89,17 +89,17 @@ export default class Game extends EventEmitter {
 	 * Starts the game
 	 * @return {Boolean} Returns true or false if the game started succesfully or not. 
 	 */
-	start() {
+	start(config = {}) {
 		if(this.players.length < 2) {
 			return false;
 		}
 		this.status = "started";
 
 		let rand = Math.round(Math.random());
-		this.players[rand].piece = "X";
-		this.player.X = this.players[rand];
-		this.players[1-rand].piece = "O";
-		this.player.O = this.players[1-rand];
+		this.player.X = config.X || this.players[rand];
+		this.player.X.piece = "X";
+		this.player.O = config.O || this.players[1-rand];
+		this.player.O.piece = "O";
 		this.player.X.on('make move', (x, y) => this.onPlayerPlayed(x, y, "X"))
 		this.player.O.on('make move', (x, y) => this.onPlayerPlayed(x, y, "O"))
 		this.requestAMove();
