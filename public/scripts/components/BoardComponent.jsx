@@ -13,15 +13,14 @@ export default class BoardComponent extends React.Component {
 		this.state = {
 			board: this.props.game.board,
 			player: this.props.player,
-			percent: 0,
-			autoRestartEnabled: this.props.autoRestartEnabled || true
+			percent: 0
 		}
 		this.restartInterval = undefined;
 		this.restartTimeout = this.props.restartTimeout || 2000
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if(this.state.autoRestartEnabled && prevProps.gameover !== this.props.gameover) {
+		if(this.props.autoRestartEnabled && prevProps.gameover !== this.props.gameover) {
 			let start = new Date().getTime()
 			this.restartInterval = setInterval(() => {
 				let percent = (new Date().getTime() - start) * 100 / this.restartTimeout
@@ -65,7 +64,7 @@ export default class BoardComponent extends React.Component {
 										this.props.game.winner === "draw" ? "Draw!" : "You lost :("
 			endStyles.display = 'block'
 		}
-		if(!this.state.autoRestartEnabled){
+		if(!this.props.autoRestartEnabled){
 			autoRestartStyles.display= 'none'
 		}
 
