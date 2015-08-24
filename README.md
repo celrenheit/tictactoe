@@ -1,5 +1,9 @@
 # Tic Tac Toe
 
+## Demo
+
+[Try it here](http://celrenheit.github.io/tictactoe/public/)
+
 ## Installation
 
 Grab the source code:
